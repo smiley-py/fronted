@@ -4,9 +4,9 @@ This application provides user interface for bulletin web-api with html-ajax. It
 
 ## FIRST
 
-Configure system environment on Windows OS
-Download Pyhton from visualstudio code extensions
-Download npm from visualstudio code extensions
+* Configure system environment on Windows OS
+* Download Pyhton from visualstudio code extensions
+* Download npm from visualstudio code extensions
 
 
 ## SECOND
