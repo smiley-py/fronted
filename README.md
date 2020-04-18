@@ -11,7 +11,11 @@ Download npm from visualstudio code extensions
 
 ## SECOND
 
+```
+
 -- fronted folder right click open in terminal
 npm install
 npm run build
 npm run serve
+
+```
