@@ -131,7 +131,7 @@
                 'password': $("#password").val() 
             }),
             success: function(result) {
-                localStorage.setItem("token",JSON.stringify(result));                
+                localStorage.setItem("token",result["key"]);                
                 window.location.replace("http://127.0.0.1:3001/dashboard.html");
             },
             error: function(result) {

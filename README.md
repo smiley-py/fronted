@@ -14,6 +14,7 @@ This application provides user interface for bulletin web-api with html-ajax. It
 ```
 
 -- fronted folder right click open in terminal
+
 npm install
 npm run build
 npm run serve
