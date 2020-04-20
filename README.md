@@ -1,6 +1,6 @@
 ## DESCRIPTION
 
-This application provides user interface for bulletin web-api with html-ajax. It is possible to combine pretty javascript libraries.
+This application provides user interface for bulletin web-api with jquery. It is possible to combine pretty javascript libraries.
 
 ## FIRST
 
