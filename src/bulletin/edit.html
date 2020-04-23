@@ -58,90 +58,6 @@
           if (localStorage.getItem("token")==null){
             window.location.replace("http://127.0.0.1:3001/login.html");
           }
-
-          function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(window.location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-          };
-          
-          var page = getUrlParameter('page');
-
-          if (page==null || page == "" || page == 0){
-            page=1;
-          }
-
-
-          $.ajax({
-            type: "GET",
-            dataType: "json",    
-            headers: {
-              "content-type": "application/json",
-              'Authorization': 'Token ' + localStorage.getItem("token")
-            },
-            
-            url: "http://127.0.0.1:8000/bulletins/",
-            data:{
-              'page':page
-            },
-            success: function(response) {
-              results=response.results;
-
-              var len = results.length;
-              for(var i=0; i<len; i++){
-                  var id = results[i].id;
-                  var type = results[i].btype;
-                  var priority = results[i].priority;
-                  var state = results[i].state;
-                  var code = results[i].code;
-                  var title = results[i].title;
-                  var begintime= results[i].begin_time;
-                  var endtime = results[i].end_time;                  
-
-                  var tr_str = "<tr>" +
-                      "<td >" + (i+1) + "</td>" +
-                      "<td >" + type + "</td>" +
-                      "<td >" + priority + "</td>" +
-                      "<td >" + state + "</td>" +
-                      "<td >" + code + "</td>" +
-                      "<td >" + title + "</td>" +
-                      "<td >" + begintime + "</td>" +
-                      "<td >" + endtime + "</td>" +
-                      "<td align='center'> " +
-                        "<a href='bulletin/detail.html?id=" + id + "'> Detail </a> "+
-                        "<a href='bulletin/edit.html?id=" + id + "'> Edit </a> "+
-                        "<a href='bulletin/delete.html?id=" + id + "'> Delete </a>"+
-                      "</td>"+
-                    "</tr>";
-
-                    $("#bulletinTable tbody").append(tr_str); 
-                }
-
-              
-
-              var page_str="<li class='page-item'><a class='page-link' href='"+response.links.previous+"'>Prev</a></li>";
-
-              for(var j=1; j<(response.count/response.page_size)+1; j++){
-                if (j==page){
-                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?page="+j+"'>"+j+"</a></li>";
-                }else{
-                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?page="+j+"''>"+j+"</a></li>";
-                }                 
-              }
-
-              page_str += "<li class='page-item'><a class='page-link' href='"+response.links.next+"'>Next</a></li>";
-              
-              $("#pagination").append(page_str);                 
-            },
-            error: function(result) {
-              document.getElementById("msg_div").style.display="block";
-              $("#msg_error").text(result["error"]);
-            }
-                        
-        });       
-
-        // -----------------------------------------
       });
 
     </script>
@@ -263,46 +179,9 @@
 
               </div>
               <!-- /.row-->
-                        
-              <!-- /.row-->
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="card">
-                    <div id="msg_div" class="alert alert-danger" style="display: none;" >
-                      <span id="msg_error"> </span> 
-                    </div>                    
-
-                    <div class="card-header"><i class="fa fa-align-justify"></i> Combined All Table</div>
-                    <div class="card-body">
-                      <table id="bulletinTable" class="table table-responsive-sm table-bordered table-striped table-sm">
-                        <thead>
-                          <tr>
-                            <th>No</th>
-                            <th>Type</th>
-                            <th>Priority</th>
-                            <th>State</th>
-                            <th>Code</th>
-                            <th>Title</th> 
-                            <th>Begin Time</th>
-                            <th>End Time</th>                           
-                            <th style='text-align:center;'>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          
-                        </tbody>
-                      </table>
-                      <nav>
-                        <ul class="pagination" id="pagination">
-                          
-                        </ul>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.col-->
-              </div>
-              <!-- /.row-->
+             
+              <!-- /.card-->
+              
               
             </div>
           </div>
@@ -331,7 +210,6 @@
         localStorage.clear();
         window.location.replace("http://127.0.0.1:3001/login.html");
       });
-
     </script>
   </body>
 </html>

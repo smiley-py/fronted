@@ -34,8 +34,20 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+    
     <!-- Main styles for this application-->
     <link href="css/style.css" rel="stylesheet">
+    
+    <style>
+      .tableborder table {
+        border-collapse: collapse;
+      }
+
+      .tableborder table, .tableborder td, .tableborder th {
+        border: 1px solid black;
+      }
+    </style>
+    
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
     <script>
@@ -53,22 +65,23 @@
     <link href="node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
 
     <script src="../src/js/jquery-3.5.0.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript">      
+      
       $( document ).ready(function() {
           if (localStorage.getItem("token")==null){
             window.location.replace("http://127.0.0.1:3001/login.html");
           }
           
           function getUrlParameter(name) {
-              name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-              var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-              var results = regex.exec(window.location.search);
-              return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(window.location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
           };
           
           var bid = getUrlParameter('id');
 
-          if (bid==null){
+          if (bid==null|| bid == ""){
             window.location.replace("http://127.0.0.1:3001/bulletin/index.html");
           }
 
@@ -84,12 +97,18 @@
             data:'',
             success: function(response) {
               $("#id").text(response.id);
+              
+              $("#to_list").text(response.tolist);
+              $("#cc_list").text(response.cclist);
+              $("#bcc_list").text(response.bcclist);
+
               $("#btype").text(response.btype);
               $("#priority").text(response.priority);
               $("#state").text(response.state);
               document.getElementById("state_td").style.backgroundColor=response.color;
               $("#title").text(response.code+' - '+response.title);
-              document.getElementById("title").style.color=response.color;
+              document.getElementById("title").style.color="#ffffff";
+              document.getElementById("title").style.backgroundColor=response.color;
               $("#insert_time").text(response.insert_time);
               $("#begin_time").text(response.begin_time);
               $("#end_time").text(response.end_time);
@@ -98,8 +117,8 @@
               $("#detail").text(response.detail);
               $("#effect").text(response.effect);
               $("#contact").text(response.contact);
-              $("#ticket_case_url").text(response.ticket_case_url);
-              $("#ticket_case_id").text(response.ticket_case_id);
+              $("#ticket_case_url").text(response.ticket_case_id);
+              $("#ticket_case_url").attr("href", response.ticket_case_url);
               $("#duration").text(response.duration);
               $("#resolved_by").text(response.resolved_by);
               $("#temporary_solution").text(response.temporary_solution);
@@ -111,7 +130,7 @@
                 
             },
             error: function(result) {
-              document.getElementById("msg_div").style.display="block";
+              document.getElementById("msg_error_div").style.display="block";
               $("#msg_error").text(result["error"]);
             }
             
@@ -235,24 +254,80 @@
         <main class="c-main">
           <div class="container-fluid">
             <div class="fade-in">
-              <div class="row">
-                <div class="col-lg-12" >
 
-                  <div id="msg_div" class="alert alert-danger" style="display: none;" >
-                    <span id="msg_error"> </span> 
+              <div class="row">
+                  <div class="col-lg-6 "> 
+                    <div class="card ">  
+                        <button class="btn btn-primary" type="submit" id="btn_send"> Send Bulletin</button>
+                    </div>                  
                   </div> 
 
-                  <div class="card" style="align-items: center;">
-                
-                    <table border="1" width="500px" >
+                  <div class="col-lg-6 "> 
+                    <div class="card ">  
+                        <button class="btn btn-secondary" type="reset" id="btn_back"> Back to List</button>
+                    </div>                  
+                  </div> 
+              </div>                                      
+
+              <div class="row ">                                                              
+                <div class="col-lg-12" >  
+
+                  <div class="card align-items-center">                                                             
+                    <br />
+                    <div class="alert alert-success col-lg-11" id="msg_success_div"  style="display: none;">
+                      <span id="msg_success" > success </span> 
+                      
+                    </div>
+                    <div class="alert alert-danger col-lg-11" id="msg_error_div"  style="display: none;">
+                      <span id="msg_error" > error </span> 
+                      
+                    </div>
+
+                    <table id="mailaddresses" width="500px" style="display:block;" class="tableborder">
+                      <tr>
+                          <td colspan="2"
+                              style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
+                              <span style=" font-weight: bold;">Mail Addresses</span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+                              To List
+                          </td>
+                          <td style=" text-align: left; margin: 10px; padding: 10px;width: 350px;">
+                            <span id="to_list"></span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+                              CC List
+                          </td>
+                          <td style=" text-align: left; margin: 10px; padding: 10px;">
+                            <span id="cc_list"></span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+                              BCC list
+                          </td>
+                          <td style=" text-align: left; margin: 10px; padding: 10px;">
+                            <span id="bcc_list"></span>
+                          </td>
+                      </tr>                      
+          
+                  </table>
+                  
+                  <br />
+
+                    <table width="500px" class="tableborder">
                         <tr>
                             <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">
                                 <span id="insert_time"></span>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="margin: 10px; padding: 10px;  text-align: center;">
-                                <span id="title" style="font-weight: bold;"></span>
+                            <td colspan="2" id="title" style="margin: 10px; padding: 10px;  text-align: center;">
+                                <span style="font-weight: bold;"></span>
                             </td>
                         </tr>
             
@@ -326,7 +401,7 @@
                                 Ticket Case Id
                             </td>
                             <td style=" text-align: left; margin: 10px; padding: 10px;">
-                                <a id="ticket_case_url" href="{bulletin.ticket_case_url}" style="text-decoration:none;"> </a>
+                                <a id="ticket_case_url" href="#" style="text-decoration:none;"> </a>
                             </td>
                         </tr>
                         <tr>
@@ -349,7 +424,7 @@
             
                     <br />
             
-                    <table border="1" id="resolution" width="500px" style="display:none;">
+                    <table id="resolution" width="500px" style="display:none;" class="tableborder">
                         <tr>
                             <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">
                               <span id="resolved_time"> </span>
@@ -399,7 +474,7 @@
                     © 2020 smiley-py, Inc.
                   </div>
             
-                </div> 
+                </div>
               </div>      
             </div>
           </div>
@@ -419,7 +494,7 @@
     <script src="node_modules/@coreui/chartjs/dist/js/coreui-chartjs.bundle.js"></script>
     <script src="node_modules/@coreui/utils/dist/coreui-utils.js"></script>
     <script src="../js/main.js"></script>
-
+    
     <script src="../src/js/jquery-3.5.0.js"></script>
     <script type="text/javascript"> 
       $("#btn_logout").click(function(e) {
@@ -428,6 +503,44 @@
         localStorage.clear();
         window.location.replace("http://127.0.0.1:3001/login.html");
       });
+
+      $("#btn_back").click(function(e) {
+        e.preventDefault();
+        window.location.replace("http://127.0.0.1:3001/bulletin/index.html");
+      });
+      
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(window.location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      };
+          
+      var bid = getUrlParameter('id');
+
+      $("#btn_send").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "GET",
+            dataType: "json",    
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")
+            },
+            
+            url: "http://127.0.0.1:8000/bulletins/"+bid+"/send/",
+            data:'',
+            success: function(response) {
+              document.getElementById("msg_success_div").style.display="block";
+              $("#msg_success").text(response.message);
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          });
+        });
+
     </script>
   </body>
 </html>
