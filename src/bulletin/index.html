@@ -98,13 +98,14 @@
                   var code = results[i].code;
                   var title = results[i].title;
                   var begintime= results[i].begin_time;
-                  var endtime = results[i].end_time;                  
+                  var endtime = results[i].end_time;  
+                  var color = results[i].color;                   
 
                   var tr_str = "<tr>" +
                       "<td >" + (i+1) + "</td>" +
                       "<td >" + type + "</td>" +
                       "<td >" + priority + "</td>" +
-                      "<td >" + state + "</td>" +
+                      "<td style='color:"+color+";'>" + state + "</td>" +
                       "<td >" + code + "</td>" +
                       "<td >" + title + "</td>" +
                       "<td >" + begintime + "</td>" +
@@ -284,7 +285,10 @@
                       <span id="msg_error"> </span> 
                     </div>                    
 
-                    <div class="card-header"><i class="fa fa-align-justify"></i> Combined All Bulletins </div>
+                    <div class="card-header">
+                      <i class="fa fa-align-justify"></i> Combined All Bulletins &nbsp;
+                      <a href="bulletin/create.html" class="btn btn-warning" id=""> Create </a>
+                    </div>
                     <div class="card-body">
                       <table id="bulletinTable" class="table table-responsive-sm table-bordered table-striped table-sm">
                         <thead>
@@ -376,12 +380,13 @@
                   var title = results[i].title;
                   var begintime= results[i].begin_time;
                   var endtime = results[i].end_time;                  
+                  var color = results[i].color;  
 
                   var tr_str = "<tr>" +
                       "<td >" + (i+1) + "</td>" +
                       "<td >" + type + "</td>" +
                       "<td >" + priority + "</td>" +
-                      "<td >" + state + "</td>" +
+                      "<td style='color:" +color+ ";'>" + state + "</td>" +
                       "<td >" + code + "</td>" +
                       "<td >" + title + "</td>" +
                       "<td >" + begintime + "</td>" +

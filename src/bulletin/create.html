@@ -35,7 +35,13 @@
     <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <!-- Main styles for this application-->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/dateTime/jquery.datetimepicker.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+    <style>
+      .help-block{
+        color: red;        
+      }
+    </style>
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
     <script>
@@ -52,12 +58,110 @@
     </script>
     <link href="node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
 
-    <script src="../src/js/jquery-3.5.0.js"></script>
+    <script src="../js/jquery-3.5.0.js"></script>
+    <script src="../js/dateTime/jquery.js"></script>
+    <script src="../js/dateTime/build/jquery.datetimepicker.full.js"></script>
+    
     <script type="text/javascript">
       $( document ).ready(function() {
           if (localStorage.getItem("token")==null){
             window.location.replace("http://127.0.0.1:3001/login.html");
-          }
+          }                   
+          $.datetimepicker.setLocale('en');
+          // $('.datetimepicker').datetimepicker({ format: 'm/d/Y h:i A', timepicker: true });
+          $('.datetimepicker').datetimepicker({ format: 'Y-m-dTH:i:sO', timepicker: true });
+          $('.datepicker').datetimepicker({ format: 'm/d/Y', timepicker: false });
+
+          $.ajax({
+            type: "GET",
+            dataType: "json",
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")              
+            },
+            
+            url: "http://127.0.0.1:8000/bulletins/",
+            data: {page:1},
+            success: function(response) {
+              var code="BLT"+(20050+response.count);
+              $("#Code").val(code);                                     
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          });
+          $.ajax({
+            type: "GET",
+            dataType: "json",
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")              
+            },
+            
+            url: "http://127.0.0.1:8000/btypes/",
+            data: '',
+            success: function(response) {
+              var len = response.length;
+              for(var i=0; i<len; i++){
+                  var name = response[i].name;
+                  var li_str = "<option value='"+name+"'> " + name +" </option>";
+                  $("#BType").append(li_str);                     
+                  } 
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          }); 
+          $.ajax({
+            type: "GET",
+            dataType: "json",
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")              
+            },
+            
+            url: "http://127.0.0.1:8000/priorities/",
+            data: '',
+            success: function(response) {
+              var len = response.length;
+              for(var i=0; i<len; i++){
+                  var name = response[i].name;
+                  var li_str = "<option value='"+name+"'> " + name +" </option>";
+                  $("#Priority").append(li_str);                     
+                  }           
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          });
+
+          $.ajax({
+            type: "GET",
+            dataType: "json",
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")              
+            },
+            
+            url: "http://127.0.0.1:8000/states/",
+            data: '',
+            success: function(response) {
+              var len = response.length;
+              for(var i=0; i<len; i++){
+                  var name = response[i].name;
+                  var li_str = "<option value='"+name+"'> " + name +" </option>";
+                  $("#State").append(li_str);                     
+                  }         
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          });
+
       });
 
     </script>
@@ -179,7 +283,127 @@
 
               </div>
               <!-- /.row-->
-             
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header"><strong>Bulletin</strong> Form</div>
+
+                    <br />
+                    <div class="alert alert-success col-lg-11" id="msg_success_div"  style="display: none;">
+                      <span id="msg_success" > success </span>                       
+                    </div>
+                    <div class="alert alert-danger col-lg-11" id="msg_error_div"  style="display: none;">
+                      <span id="msg_error" > error </span>                       
+                    </div>
+
+                    <div class="card-body">
+                      <form class="form-horizontal" action="" method="post">
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Code">Code</label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="Code" type="text" name="Code" disabled="disabled" >
+                          </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-BType">BType <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <select class="form-control " id="BType" name="BType" tabindex="-1" aria-hidden="true">
+
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Priority">Priority <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <select class="form-control " id="Priority" name="Priority" tabindex="-1" aria-hidden="true">
+                              
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-State">State <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <select class="form-control " id="State" name="State" tabindex="-1" aria-hidden="true">
+                           
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Title">Title <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="Title" type="text" name="Title" placeholder="Enter Title.." />
+                            <span class="help-block" id="hb_Title" style="display: none;">Please enter your Title</span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Detail">Detail <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <textarea  class="form-control" id="Detail" name="Detail" rows="5" placeholder="Enter Detail.." ></textarea>
+                            <span class="help-block" id="hb_Detail" style="display: none;">Please enter your Detail</span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Effect">Effect <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <textarea  class="form-control" id="Effect" name="Effect" rows="5" placeholder="Enter Effect.."></textarea>
+                            <span class="help-block" id="hb_Effect" style="display: none;">Please enter your Effect</span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Contact">Contact <span class="help-block">*</span> </label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="Contact" type="text" name="Contact" placeholder="Enter Contact.." >
+                            <span class="help-block" id="hb_Contact" style="display: none;">Please enter your Contact</span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-BeginTime">BeginTime <span class="help-block">*</span> </label>
+                          <div class="col-md-9">
+                            <input class="form-control datetimepicker" id="BeginTime" type="text" name="BeginTime" placeholder="Enter BeginTime.." >
+                            <span class="help-block" id="hb_BeginTime" style="display: none;">Please enter your BeginTime</span>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-EndTime">EndTime</label>
+                          <div class="col-md-9">
+                            <input class="form-control datetimepicker" id="EndTime" type="text" name="EndTime" placeholder="Enter EndTime.." >
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseURL">CaseURL</label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="CaseURL" type="text" name="CaseURL" placeholder="Enter CaseURL..">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">CaseID</label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="CaseID" type="text" name="CaseID" placeholder="Enter CaseID.." >
+                          </div>
+                        </div>                        
+
+
+
+
+
+
+
+
+
+                      </form>
+                    </div>
+                    <div class="card-footer">
+                      <button class="btn btn-primary" type="submit" id="btn_create"> Create </button>
+                      <a href="bulletin/index.html" class="btn btn-secondary" > Back to list</a>
+                    </div>
+                  </div>
+
+                  
+                </div>
+              </div>
+              
+
               <!-- /.card-->
               
               
@@ -202,14 +426,160 @@
     <script src="node_modules/@coreui/utils/dist/coreui-utils.js"></script>
     <script src="../js/main.js"></script>
 
-    <script src="../src/js/jquery-3.5.0.js"></script>
+    <script src="../js/jquery-3.5.0.js"></script>
+    <script src="../js/moment.js"></script>
+    <script src="../js/dateTime/jquery.js"></script>
+    <script src="../js/dateTime/build/jquery.datetimepicker.full.js"></script>
+
     <script type="text/javascript"> 
       $("#btn_logout").click(function(e) {
         e.preventDefault();
         localStorage.removeItem("token");
         localStorage.clear();
         window.location.replace("http://127.0.0.1:3001/login.html");
-      });
+      });      
+
+      $("#btn_create").click(function(e) {
+          e.preventDefault();  
+          var datetimenow = moment().format();
+          alert(datetimenow);
+
+          var smtp = "smtp.gmail.com";
+          var port = "587";
+          var username = "itmonitoringcommunity@gmail.com";
+          var password = "MonitoringCommunity18";
+          var tolist = "oguzkaragoz@gmail.com";
+          var cclist = "itmonitoringcommunity@gmail.com";
+          var bcclist = "";
+
+          var btype = $("#BType").val();
+          var priority = $("#Priority").val();
+          var state = $("#State").val();
+          var color = "#000000";
+          switch(state){
+            case "Scheduled":
+              color= "#f9b115";break;
+            case "Started":
+              color= "#e55353";break;
+            case "Done":
+              color= "#2eb85c";break;
+            case "Rollback":
+              color= "#321fdb";break;
+            case "Cancel":
+              color= "#ced2d8";break;
+          }
+
+          var created_by = "Admin";
+          var code = $("#Code").val(); 
+          var title = $("#Title").val();
+          var detail = $("#Detail").val();
+          var effect = $("#Effect").val();
+          var contact = $("#Contact").val();
+        
+          var begin_time = $("#BeginTime").val().replace("GMT", "T");
+          var end_time =  $("#EndTime").val().replace("GMT", "T");          
+          var duration = "0";
+          if (begin_time=="" && end_time==""){
+            try{
+              var d1 = moment.duration(begin_time).asMinutes();
+              var d2 = moment.duration(end_time).asMinutes();
+              var rd = d2-d1;
+              duration = rd;
+              alert(duration);
+            }catch(e){
+              alert("Datetime inputs are invalid.")
+            }
+          }
+          var ticket_case_url =  $("#CaseURL").val();
+          var ticket_case_id =  $("#CaseID").val();
+
+          var resolved_time = datetimenow;
+          var is_resolved = 0;
+          var resolved_by = "";
+          var temporary_solution = "";
+          var permanent_solution = "";
+          var root_cause = "";
+        
+          var insert_time = datetimenow; 
+          var modify_time = datetimenow;
+          var is_deleted = 0;                
+
+          if(begin_time==""){
+            document.getElementById("hb_BeginTime").style.display="block";
+          }
+          if(title==""){
+            document.getElementById("hb_Title").style.display="block";
+          }
+          if(detail==""){
+            document.getElementById("hb_Detail").style.display="block";
+          }
+          if(effect==""){
+            document.getElementById("hb_Effect").style.display="block";
+          }
+          if(contact==""){
+            document.getElementById("hb_Contact").style.display="block";
+          }
+
+          if(begin_time=="" || title=="" || detail=="" || effect=="" || contact==""){
+          $.ajax({
+            type: "POST",
+            dataType: "json",
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")              
+            },
+            
+            url: "http://127.0.0.1:8000/bulletins/create/",
+            data: JSON.stringify({                       
+                'smtp' : smtp,
+                'port' : port,
+                'username' : username,
+                'password': password,
+                'tolist' :tolist,
+                'cclist' : cclist,
+                'bcclist' :bcclist,
+
+                'btype' :btype, 
+                'priority': priority,
+                'state' :state,
+                'color' :color,
+
+                'created_by' : created_by,
+                'code' : code,
+                'title' : title,
+                'detail' : detail,
+                'effect': effect,
+                'contact' : contact,
+        
+                'begin_time' : begin_time,
+                'end_time' : end_time,
+                'duration' : duration,
+
+                'ticket_case_url' : ticket_case_url,
+                'ticket_case_id' : ticket_case_id,
+
+                'resolved_time':resolved_time,
+                'is_resolved' :is_resolved,
+                'resolved_by' : resolved_by,
+                'temporary_solution': temporary_solution,
+                'permanent_solution' : permanent_solution,
+                'root_cause' : root_cause,
+        
+                'insert_time':insert_time,
+                'modify_time' :modify_time,
+                'is_deleted': is_deleted             
+            }),
+            success: function(response) {
+              document.getElementById("msg_success_div").style.display="block";
+              $("#msg_success").text(response.message);               
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          }); 
+        }  
+        });
     </script>
   </body>
 </html>

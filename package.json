@@ -45,6 +45,7 @@
     "build-copy": "copyfiles -a -e \"src/scss/**/*\" -e \"src/css/**/*\" -e \"src/js/**/*\" -u 1 \"src/**/*\" dist/",
     "build-vendors": "node build/vendors.js",
     "copy": "npm-run-all --parallel copy-*",
+    "copy-css": "copyfiles -a -u 1 \"src/css/**/*.css\" dist/",
     "copy-assets": "copyfiles -a -u 1 \"src/assets/**/*\" dist/",
     "copy-views": "copyfiles -a -u 1 \"src/**/*.html\" dist/",
     "css": "npm-run-all --parallel css-compile* --sequential css-prefix css-minify*",

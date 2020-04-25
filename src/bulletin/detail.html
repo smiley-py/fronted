@@ -108,7 +108,7 @@
               document.getElementById("state_td").style.backgroundColor=response.color;
               $("#title").text(response.code+' - '+response.title);
               document.getElementById("title").style.color="#ffffff";
-              document.getElementById("title").style.backgroundColor=response.color;
+              document.getElementById("title_div").style.backgroundColor=response.color;
               $("#insert_time").text(response.insert_time);
               $("#begin_time").text(response.begin_time);
               $("#end_time").text(response.end_time);
@@ -326,8 +326,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" id="title" style="margin: 10px; padding: 10px;  text-align: center;">
-                                <span style="font-weight: bold;"></span>
+                            <td colspan="2" id="title_div" style="margin: 10px; padding: 10px;  text-align: center;">
+                                <span id="title" style="font-weight: bold;"></span>
                             </td>
                         </tr>
             
@@ -520,25 +520,27 @@
 
       $("#btn_send").click(function(e) {
         e.preventDefault();
-        $.ajax({
-            type: "GET",
-            dataType: "json",    
-            headers: {
-              "content-type": "application/json",
-              'Authorization': 'Token ' + localStorage.getItem("token")
-            },
-            
-            url: "http://127.0.0.1:8000/bulletins/"+bid+"/send/",
-            data:'',
-            success: function(response) {
-              document.getElementById("msg_success_div").style.display="block";
-              $("#msg_success").text(response.message);
-            },
-            error: function(result) {
-              document.getElementById("msg_error_div").style.display="block";
-              $("#msg_error").text(result["error"]);
-            }
-          });
+        if(confirm("Are you sure send to this bulletin? ")==true){
+          $.ajax({
+              type: "GET",
+              dataType: "json",    
+              headers: {
+                "content-type": "application/json",
+                'Authorization': 'Token ' + localStorage.getItem("token")
+              },
+              
+              url: "http://127.0.0.1:8000/bulletins/"+bid+"/send/",
+              data:'',
+              success: function(response) {
+                document.getElementById("msg_success_div").style.display="block";
+                $("#msg_success").text(response.message);
+              },
+              error: function(result) {
+                document.getElementById("msg_error_div").style.display="block";
+                $("#msg_error").text(result["error"]);
+              }
+            });
+          }
         });
 
     </script>

@@ -5,7 +5,6 @@ This application provides user interface for bulletin web-api with jquery. It is
 ## FIRST
 
 * Configure system environment on Windows OS
-* Download Pyhton from visualstudio code extensions
 * Download npm from visualstudio code extensions
 
 
