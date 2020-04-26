@@ -99,10 +99,18 @@
                   var title = results[i].title;
                   var begintime= results[i].begin_time;
                   var endtime = results[i].end_time;  
-                  var color = results[i].color;                   
+                  var color = results[i].color;    
+                  var is_automated = results[i].is_automated;  
+                  var sw="";              
+                  if(is_automated=="1"){
+                    sw= "<input class='c-switch-input' type='checkbox' checked='' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";
+                  }else{
+                    sw= "<input class='c-switch-input' type='checkbox' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";                      
+                  }
 
                   var tr_str = "<tr>" +
                       "<td >" + (i+1) + "</td>" +
+                      "<td ><label class='c-switch c-switch-label c-switch-danger'>"+ sw +"</label></td>"+                      
                       "<td >" + type + "</td>" +
                       "<td >" + priority + "</td>" +
                       "<td style='color:"+color+";'>" + state + "</td>" +
@@ -294,6 +302,7 @@
                         <thead>
                           <tr>
                             <th>No</th>
+                            <th>Automated</th>
                             <th>Type</th>
                             <th>Priority</th>
                             <th>State</th>

@@ -127,7 +127,10 @@
               if(response.is_resolved=="1"){
                 document.getElementById("resolution").style.display="block";
               }
-                
+              if(response.is_automated=="1"){
+                ('#is_automated').prop('checked', true);
+              }
+               
             },
             error: function(result) {
               document.getElementById("msg_error_div").style.display="block";
@@ -269,213 +272,256 @@
                   </div> 
               </div>                                      
 
-              <div class="row ">                                                              
-                <div class="col-lg-12" >  
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header"><strong>Bulletin</strong> Detail</div>
+                    <div class="card-body">
+                      <div style="text-align: center;"> 
+                      <form class="form-horizontal" action="" method="post">
+                        <div class="form-group row ">    
+<!-- ----------------------------------------------------------- -->
 
-                  <div class="card align-items-center">                                                             
-                    <br />
-                    <div class="alert alert-success col-lg-11" id="msg_success_div"  style="display: none;">
-                      <span id="msg_success" > success </span> 
-                      
-                    </div>
-                    <div class="alert alert-danger col-lg-11" id="msg_error_div"  style="display: none;">
-                      <span id="msg_error" > error </span> 
-                      
-                    </div>
+<br />
+<div class="alert alert-success col-lg-11" id="msg_success_div"  style="display: none;">
+  <span id="msg_success" > success </span> 
+  
+</div>
 
-                    <table id="mailaddresses" width="500px" style="display:block;" class="tableborder">
-                      <tr>
-                          <td colspan="2"
-                              style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
-                              <span style=" font-weight: bold;">Mail Addresses</span>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                              To List
-                          </td>
-                          <td style=" text-align: left; margin: 10px; padding: 10px;width: 350px;">
-                            <span id="to_list"></span>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                              CC List
-                          </td>
-                          <td style=" text-align: left; margin: 10px; padding: 10px;">
-                            <span id="cc_list"></span>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                              BCC list
-                          </td>
-                          <td style=" text-align: left; margin: 10px; padding: 10px;">
-                            <span id="bcc_list"></span>
-                          </td>
-                      </tr>                      
-          
-                  </table>
-                  
-                  <br />
+<div class="alert alert-danger col-lg-11" id="msg_error_div"  style="display: none;">
+  <span id="msg_error" > error </span> 
+  
+</div>
 
-                    <table width="500px" class="tableborder">
-                        <tr>
-                            <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">
-                                <span id="insert_time"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" id="title_div" style="margin: 10px; padding: 10px;  text-align: center;">
-                                <span id="title" style="font-weight: bold;"></span>
-                            </td>
-                        </tr>
-            
-                        <tr>
-                            <td style=" text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Type
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="btype"></span>
-                            </td>
-                        </tr>
-            
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Created By
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px; ">
-                              <span id="created_by"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Detail
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="detail"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Effect
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="effect"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Contact
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="contact"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Begin Time
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="begin_time"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                End Time
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="end_time"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Duration
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="duration"></span> (Min.)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Ticket Case Id
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                                <a id="ticket_case_url" href="#" style="text-decoration:none;"> </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Priority
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="priority"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                State
-                            </td>
-                            <td id ="state_td" style="text-align: left; margin: 10px; padding: 10px; color: #ffffff; ">
-                                <span id="state"> </span>
-                            </td>
-                        </tr>
-                    </table>
-            
-                    <br />
-            
-                    <table id="resolution" width="500px" style="display:none;" class="tableborder">
-                        <tr>
-                            <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">
-                              <span id="resolved_time"> </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"
-                                style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
-                                <span style=" font-weight: bold;">Resolution</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Resolved By
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;width: 350px;">
-                              <span id="resolved_by"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Temporary Solution
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="temporary_solution"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Permanent_solution
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="permanent_solution"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-                                Root Cause
-                            </td>
-                            <td style=" text-align: left; margin: 10px; padding: 10px;">
-                              <span id="root_cause"></span>
-                            </td>
-                        </tr>
-            
-                    </table>
-                    <br />
-                    © 2020 smiley-py, Inc.
+<br />
+
+<table id="mailaddresses" width="500px" style="display:block;" class="tableborder">
+  <tr>
+      <td colspan="2"
+          style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
+          <span style=" font-weight: bold;">Mail Addresses</span>
+      </td>
+  </tr>
+  <tr>
+      <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+          To List
+      </td>
+      <td style=" text-align: left; margin: 10px; padding: 10px;width: 350px;">
+        <span id="to_list"></span>
+      </td>
+  </tr>
+  <tr>
+      <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+          CC List
+      </td>
+      <td style=" text-align: left; margin: 10px; padding: 10px;">
+        <span id="cc_list"></span>
+      </td>
+  </tr>
+  <tr>
+      <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+          BCC list
+      </td>
+      <td style=" text-align: left; margin: 10px; padding: 10px;">
+        <span id="bcc_list"></span>
+      </td>
+  </tr>                      
+
+</table>
+
+<br />
+<br />
+
+<table width="500px" class="tableborder">
+    <tr>
+        <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">                               
+          <span id="insert_time"></span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" id="title_div" style="margin: 10px; padding: 10px;  text-align: center;">
+            <span id="title" style="font-weight: bold;"></span>
+        </td>
+    </tr>
+
+    <tr>
+        <td style=" text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Type
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="btype"></span>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Created By
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px; ">
+          <span id="created_by"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Detail
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="detail"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Effect
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="effect"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Contact
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="contact"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Begin Time
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="begin_time"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            End Time
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="end_time"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Duration
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="duration"></span> (Min.)
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Ticket Case Id
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+            <a id="ticket_case_url" href="#" style="text-decoration:none;"> </a>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Priority
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="priority"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+          State
+        </td>
+        <td id ="state_td" style="text-align: left; margin: 10px; padding: 10px; color: #ffffff; ">
+            <span id="state"> </span>                                 
+        </td>
+    </tr>
+</table>
+
+<br />
+<br />
+
+<table id="resolution" width="500px" style="display:none;" class="tableborder">
+    <tr>
+        <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">
+          <span id="resolved_time"> </span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"
+            style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
+            <span style=" font-weight: bold;">Resolution</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Resolved By
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;width: 350px;">
+          <span id="resolved_by"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Temporary Solution
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="temporary_solution"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Permanent_solution
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="permanent_solution"></span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
+            Root Cause
+        </td>
+        <td style=" text-align: left; margin: 10px; padding: 10px;">
+          <span id="root_cause"></span>
+        </td>
+    </tr>
+
+</table>
+
+<br />
+© 2020 smiley-py, Inc.
+
+<!-- ----------------------------------------------------------- -->                          
+                          </div>                                                
+                        </form>
+                      </div>
+                    </div>    
                   </div>
-            
                 </div>
-              </div>      
+              </div>
+
+
+
+              
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header"><strong>Bulletin</strong> Detail</div>
+                    <div class="card-body">
+                      <form class="form-horizontal" action="" method="post">
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Is Automated</label>
+                          <div class="col-md-9">
+                            <label class="c-switch c-switch-label c-switch-danger">
+                              <input class="c-switch-input" type="checkbox" id="is_automated" disabled="disabled" ><span class="c-switch-slider" data-checked="On" data-unchecked="Off"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>    
+                  </div>
+                </div>
+              </div>
+
+                
+              </div>
             </div>
           </div>
         </main>

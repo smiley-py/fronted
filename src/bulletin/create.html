@@ -289,10 +289,10 @@
                     <div class="card-header"><strong>Bulletin</strong> Form</div>
 
                     <br />
-                    <div class="alert alert-success col-lg-11" id="msg_success_div"  style="display: none;">
+                    <div class="alert alert-success col-lg-12" id="msg_success_div"  style="display: none;">
                       <span id="msg_success" > success </span>                       
                     </div>
-                    <div class="alert alert-danger col-lg-11" id="msg_error_div"  style="display: none;">
+                    <div class="alert alert-danger col-lg-12" id="msg_error_div"  style="display: none;">
                       <span id="msg_error" > error </span>                       
                     </div>
 
@@ -381,8 +381,18 @@
                           <div class="col-md-9">
                             <input class="form-control" id="CaseID" type="text" name="CaseID" placeholder="Enter CaseID.." >
                           </div>
-                        </div>                        
+                        </div> 
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Is Automated</label>
+                          <div class="col-md-9">
+                            <label class="c-switch c-switch-label c-switch-danger">
+                              <input class="c-switch-input" type="checkbox" id="IsAutomated" checked=""><span class="c-switch-slider" data-checked="On" data-unchecked="Off"></span>
+                            </label>
+                          </div>
+                        </div>                       
 
+
+                        
 
 
 
@@ -442,7 +452,6 @@
       $("#btn_create").click(function(e) {
           e.preventDefault();  
           var datetimenow = moment().format();
-          alert(datetimenow);
 
           var smtp = "smtp.gmail.com";
           var port = "587";
@@ -479,17 +488,19 @@
           var begin_time = $("#BeginTime").val().replace("GMT", "T");
           var end_time =  $("#EndTime").val().replace("GMT", "T");          
           var duration = "0";
-          if (begin_time=="" && end_time==""){
+          
+          if(begin_time != "" || end_time != ""){
             try{
-              var d1 = moment.duration(begin_time).asMinutes();
-              var d2 = moment.duration(end_time).asMinutes();
-              var rd = d2-d1;
-              duration = rd;
-              alert(duration);
+              var d1 = new moment(begin_time);
+              var d2 = new moment(end_time);
+              var rd = moment.duration(d2.diff(d1)).asMinutes();
+              duration = Math.round(rd);
             }catch(e){
-              alert("Datetime inputs are invalid.")
+              alert("Datetime inputs are invalid.");
             }
+            
           }
+
           var ticket_case_url =  $("#CaseURL").val();
           var ticket_case_id =  $("#CaseID").val();
 
@@ -502,7 +513,9 @@
         
           var insert_time = datetimenow; 
           var modify_time = datetimenow;
+          var is_automated = $('#IsAutomated:checked').val() ? 1 : 0;
           var is_deleted = 0;                
+          
 
           if(begin_time==""){
             document.getElementById("hb_BeginTime").style.display="block";
@@ -520,7 +533,7 @@
             document.getElementById("hb_Contact").style.display="block";
           }
 
-          if(begin_time=="" || title=="" || detail=="" || effect=="" || contact==""){
+          if(begin_time !="" && title !="" &&  detail !="" &&  effect !="" &&  contact !=""){
           $.ajax({
             type: "POST",
             dataType: "json",
