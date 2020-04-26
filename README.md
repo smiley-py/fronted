@@ -12,7 +12,7 @@ This application provides user interface for bulletin-api with jquery. It is pos
 
 ```
 
--- fronted folder right click open in terminal
+-- frontend folder right click open in terminal
 
 npm install
 npm run build

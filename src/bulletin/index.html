@@ -134,9 +134,9 @@
 
               for(var j=1; j<(response.count/response.page_size)+1; j++){
                 if (j==response.current){
-                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?page="+j+"'>"+j+"</a></li>";
+                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?search="+search+"&page="+j+"'>"+j+"</a></li>";
                 }else{
-                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?page="+j+"''>"+j+"</a></li>";
+                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?search="+search+"&page="+j+"''>"+j+"</a></li>";
                 }                 
               }
 
@@ -395,12 +395,20 @@
                   var begintime= results[i].begin_time;
                   var endtime = results[i].end_time;                  
                   var color = results[i].color;  
+                  var is_automated = results[i].is_automated;  
+                  var sw="";              
+                  if(is_automated=="1"){
+                    sw= "<input class='c-switch-input' type='checkbox' checked='' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";
+                  }else{
+                    sw= "<input class='c-switch-input' type='checkbox' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";                      
+                  }
 
                   var tr_str = "<tr>" +
                       "<td >" + (i+1) + "</td>" +
+                      "<td ><label class='c-switch c-switch-label c-switch-danger'>"+ sw +"</label></td>"+                      
                       "<td >" + type + "</td>" +
                       "<td >" + priority + "</td>" +
-                      "<td style='color:" +color+ ";'>" + state + "</td>" +
+                      "<td style='color:"+color+";'>" + state + "</td>" +
                       "<td >" + code + "</td>" +
                       "<td >" + title + "</td>" +
                       "<td >" + begintime + "</td>" +
@@ -413,9 +421,8 @@
                     "</tr>";
 
                     $("#bulletinTable tbody").append(tr_str); 
-                    
-                  }
-            
+                }
+
               var page_str="<li class='page-item'><a class='page-link' href='"+response.links.previous+"'>Prev</a></li>";
 
               for(var j=1; j<(response.count/response.page_size)+1; j++){

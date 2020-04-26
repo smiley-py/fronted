@@ -60,7 +60,7 @@
 
     <script src="../js/jquery-3.5.0.js"></script>
     <script src="../js/dateTime/jquery.js"></script>
-    <script src="../js/dateTime/build/jquery.datetimepicker.full.js"></script>
+    <script src="../js/dateTime/jquery.datetimepicker.full.min.js"></script>
     
     <script type="text/javascript">
       $( document ).ready(function() {
@@ -69,7 +69,7 @@
           }                   
           $.datetimepicker.setLocale('en');
           // $('.datetimepicker').datetimepicker({ format: 'm/d/Y h:i A', timepicker: true });
-          $('.datetimepicker').datetimepicker({ format: 'Y-m-dTH:i:sO', timepicker: true });
+          $('.datetimepicker').datetimepicker({ format: 'Y-m-d H:i:s', timepicker: true });
           $('.datepicker').datetimepicker({ format: 'm/d/Y', timepicker: false });
 
           $.ajax({
@@ -293,17 +293,22 @@
                 <div class="col-lg-12">
                   <div class="card">
                     <div class="card-header"><strong>Bulletin</strong> Form</div>
-
-                    <br />
-                    <div class="alert alert-success col-lg-12" id="msg_success_div"  style="display: none;">
-                      <span id="msg_success" > success </span>                       
-                    </div>
-                    <div class="alert alert-danger col-lg-12" id="msg_error_div"  style="display: none;">
-                      <span id="msg_error" > error </span>                       
-                    </div>
-
                     <div class="card-body">
                       <form class="form-horizontal" action="" method="post">
+                        <div class="form-group row" >    
+<!-- ----------------------------------------------------------- -->
+
+<div class="alert alert-success col-lg-12" id="msg_success_div"  style="display: none;">
+  <span id="msg_success" > success </span> 
+</div>
+
+<div class="alert alert-danger col-lg-12" id="msg_error_div"  style="display: none;">
+  <span id="msg_error" > error </span>  
+</div>
+
+<!-- ----------------------------------------------------------- -->                          
+                        </div> 
+
                         <div class="form-group row">
                           <label class="col-md-3 col-form-label" for="hf-Code">Code</label>
                           <div class="col-md-9">
@@ -400,13 +405,6 @@
 
                         
 
-
-
-
-
-
-
-
                       </form>
                     </div>
                     <div class="card-footer">
@@ -445,7 +443,7 @@
     <script src="../js/jquery-3.5.0.js"></script>
     <script src="../js/moment.js"></script>
     <script src="../js/dateTime/jquery.js"></script>
-    <script src="../js/dateTime/build/jquery.datetimepicker.full.js"></script>
+    <script src="../js/dateTime/jquery.datetimepicker.full.min.js"></script>
 
     <script type="text/javascript"> 
       $("#btn_logout").click(function(e) {
@@ -491,8 +489,8 @@
           var effect = $("#Effect").val();
           var contact = $("#Contact").val();
         
-          var begin_time = $("#BeginTime").val().replace("GMT", "T");
-          var end_time =  $("#EndTime").val().replace("GMT", "T");          
+          var begin_time = $("#BeginTime").val().replace(" ", "T");
+          var end_time =  $("#EndTime").val().replace(" ", "T");          
           var duration = "0";
           
           if(begin_time != "" || end_time != ""){
@@ -585,7 +583,7 @@
                 'root_cause' : root_cause,
         
                 'insert_time':insert_time,
-                'modify_time' :modify_time,
+                'is_automated' : is_automated,
                 'is_deleted': is_deleted             
             }),
             success: function(response) {
