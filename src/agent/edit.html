@@ -35,7 +35,13 @@
     <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <!-- Main styles for this application-->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/dateTime/jquery.datetimepicker.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+    <style>
+      .help-block{
+        color: red;        
+      }
+    </style>
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
     <script>
@@ -52,12 +58,75 @@
     </script>
     <link href="node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
 
-    <script src="../src/js/jquery-3.5.0.js"></script>
+    <script src="../js/jquery-3.5.0.js"></script>
+    <script src="../js/dateTime/jquery.js"></script>
+    <script src="../js/dateTime/jquery.datetimepicker.full.min.js"></script>
+    
     <script type="text/javascript">
+        function getUrlParameter(name) {
+          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+          var results = regex.exec(window.location.search);
+          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+          
+        var bid = "";
+        var globaldetail = null;
+
       $( document ).ready(function() {
           if (localStorage.getItem("token")==null){
             window.location.replace("http://127.0.0.1:3001/login.html");
+          }                   
+          $.datetimepicker.setLocale('en');
+          // $('.datetimepicker').datetimepicker({ format: 'm/d/Y h:i A', timepicker: true });
+          $('.datetimepicker').datetimepicker({ format: 'Y-m-d H:i:s', timepicker: true });
+          $('.datepicker').datetimepicker({ format: 'm/d/Y', timepicker: false });
+         
+          bid = getUrlParameter('id');
+
+          if (bid==null|| bid == ""){
+            window.location.replace("http://127.0.0.1:3001/agent/index.html");
           }
+
+          $.ajax({
+            type: "GET",
+            dataType: "json",    
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")
+            },
+            
+            url: "http://127.0.0.1:8000/agents/"+bid,
+            data:'',
+            success: function(response) {
+              globaldetail = response;
+
+              $("#id").val(response.id);
+              $("#Name").val(response.name);
+              $("#Description").val(response.description);
+              $("#Path").val(response.path);
+              $("#ScriptContent").val(response.script_content);
+              $("#ScriptInputs").val(response.script_inputs);
+              $("#Delay").val(response.delay);
+              $("#Output").val(response.output);
+              $("#Result").val(response.result);
+              $("#StartTime").val((response.start_time).replace("T"," ").split("+")[0]);
+
+              if(response.is_scheduled=="1"){
+                ('#IsScheduled').prop('checked', true);
+              }
+               
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+              window.location.replace("http://127.0.0.1:3001/404.html");
+            }
+            
+        });
+
+        // -----------------------------------------
+
       });
 
     </script>
@@ -90,6 +159,7 @@
             <svg class="c-sidebar-nav-icon">
               <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-drop1"></use>
             </svg> List </a></li>
+
       </ul>
       <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
     </div>
@@ -184,7 +254,120 @@
 
               </div>
               <!-- /.row-->
-             
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header"><strong>Agent</strong> Form</div>
+                    <div class="card-body">
+                      <form class="form-horizontal" action="" method="post">
+                        <div class="form-group row" >    
+<!-- ----------------------------------------------------------- -->
+
+<div class="alert alert-success col-lg-12" id="msg_success_div"  style="display: none;">
+  <span id="msg_success" > success </span> 
+</div>
+
+<div class="alert alert-danger col-lg-12" id="msg_error_div"  style="display: none;">
+  <span id="msg_error" > error </span>  
+</div>
+
+<!-- ----------------------------------------------------------- -->                          
+                        </div>                         
+                        
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Name">Name <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="Name" type="text" name="Name" placeholder="Enter Name.." />
+                            <span class="help-block" id="hb_Name" style="display: none;">Please enter your Name</span>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Description">Description </label>
+                          <div class="col-md-9">
+                            <textarea  class="form-control" id="Description" name="Description" rows="5" placeholder="Enter Description.." ></textarea>                            
+                          </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Path">Path <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="Path" type="text" name="Path" placeholder="Enter Path.." />
+                            <span class="help-block" id="hb_Path" style="display: none;">Please enter your Path</span>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-ScriptContent">Script Content <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <textarea  class="form-control" id="ScriptContent" name="ScriptContent" rows="5" placeholder="Enter Script Content.." ></textarea>
+                            <span class="help-block" id="hb_ScriptContent" style="display: none;">Please enter your Script Content</span>
+                          </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-ScriptInputs">Script Inputs </label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="ScriptInputs" type="text" name="ScriptInputs" placeholder="Enter Script Inputs.." />
+                            
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Delay"> Delay <span class="help-block">*</span></label>
+                          <div class="col-md-9">
+                            <input class="form-control" id="Delay" type="text" name="Delay" placeholder="Enter Delay.." />
+                            <span class="help-block" id="hb_Delay" style="display: none;">Please enter your Delay</span>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Output">Output </label>
+                          <div class="col-md-9">
+                            <textarea  class="form-control" id="Output" name="Output" rows="5" placeholder="Enter Script Output.." ></textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-Result">Result </label>
+                          <div class="col-md-9">
+                            <textarea  class="form-control" id="Result" name="Result" rows="5" placeholder="Enter Result.." ></textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-StartTime">Start Time <span class="help-block">*</span> </label>
+                          <div class="col-md-9">
+                            <input class="form-control datetimepicker" id="StartTime" type="text" name="StartTime" placeholder="Enter BeginTime.." >
+                            <span class="help-block" id="hb_StartTime" style="display: none;">Please enter your StartTime</span>
+                          </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Is Scheduled</label>
+                          <div class="col-md-9">
+                            <label class="c-switch c-switch-label c-switch-danger">
+                              <input class="c-switch-input" type="checkbox" id="IsScheduled"><span class="c-switch-slider" data-checked="On" data-unchecked="Off"></span>
+                            </label>
+                          </div>
+                        </div>                       
+
+
+                        
+
+                      </form>
+                    </div>
+                    <div class="card-footer">
+                      <button class="btn btn-primary" type="submit" id="btn_save"> Save </button>
+                      <a href="agent/index.html" class="btn btn-secondary" > Back to list</a>
+                    </div>
+                  </div>
+
+                  
+                </div>
+              </div>
+              
+
               <!-- /.card-->
               
               
@@ -207,14 +390,85 @@
     <script src="node_modules/@coreui/utils/dist/coreui-utils.js"></script>
     <script src="../js/main.js"></script>
 
-    <script src="../src/js/jquery-3.5.0.js"></script>
+    <script src="../js/jquery-3.5.0.js"></script>
+    <script src="../js/moment.js"></script>
+    <script src="../js/dateTime/jquery.js"></script>
+    <script src="../js/dateTime/jquery.datetimepicker.full.min.js"></script>
+
     <script type="text/javascript"> 
       $("#btn_logout").click(function(e) {
         e.preventDefault();
         localStorage.removeItem("token");
         localStorage.clear();
         window.location.replace("http://127.0.0.1:3001/login.html");
-      });
+      });      
+
+      $("#btn_save").click(function(e) {
+          e.preventDefault();  
+          var datetimenow = moment().format();
+          
+          var name = $("#Name").val(); 
+          var description = $("#Description").val();
+          var path = $("#Path").val();
+          var script_content = $("#ScriptContent").val();
+          var script_inputs = $("#ScriptInputs").val();
+          var delay = $("#Delay").val();
+          var output = $("#Output").val();
+          var result = $("#Result").val();
+          var start_time = $("#StartTime").val().replace(" ", "T");
+          var is_scheduled = $('#IsScheduled:checked').val() ? 1 : 0;
+          var is_deleted = 0;                
+          
+          if(start_time==""){
+            document.getElementById("hb_StartTime").style.display="block";
+          }
+          if(name==""){
+            document.getElementById("hb_Name").style.display="block";
+          }
+          if(path==""){
+            document.getElementById("hb_Path").style.display="block";
+          }
+          if(script_content==""){
+            document.getElementById("hb_ScriptContent").style.display="block";
+          }
+          if(delay==""){
+            document.getElementById("hb_Delay").style.display="block";
+          }
+
+          if(start_time !="" && name !="" &&  path !="" &&  script_content !="" &&  delay !=""){
+          $.ajax({
+            type: "PUT",
+            dataType: "json",
+            headers: {
+              "content-type": "application/json",
+              'Authorization': 'Token ' + localStorage.getItem("token")              
+            },
+            
+            url: "http://127.0.0.1:8000/agents/" + bid + "/update/",
+            data: JSON.stringify({                       
+              'name' : name, 
+              'description' : description,
+              'path' : path, 
+              'script_content' : script_content,
+              'script_inputs': script_inputs,
+              'delay' : delay, 
+              'output' : output,
+              'result' : result, 
+              'start_time' :start_time, 
+              'is_scheduled' : is_scheduled,
+              'is_deleted': is_deleted             
+            }),
+            success: function(response) {
+              document.getElementById("msg_success_div").style.display="block";
+              $("#msg_success").text(response.message);               
+            },
+            error: function(result) {
+              document.getElementById("msg_error_div").style.display="block";
+              $("#msg_error").text(result["error"]);
+            }
+          }); 
+        }  
+        });
     </script>
   </body>
 </html>

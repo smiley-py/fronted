@@ -81,7 +81,13 @@
           // $('.datetimepicker').datetimepicker({ format: 'm/d/Y h:i A', timepicker: true });
           $('.datetimepicker').datetimepicker({ format: 'Y-m-d H:i:s', timepicker: true });
           $('.datepicker').datetimepicker({ format: 'm/d/Y', timepicker: false });
-                  
+          
+          bid = getUrlParameter('id');
+
+          if (bid==null|| bid == ""){
+            window.location.replace("http://127.0.0.1:3001/bulletin/index.html");
+          }
+               
           $.ajax({
             type: "GET",
             dataType: "json",
@@ -151,13 +157,7 @@
               document.getElementById("msg_error_div").style.display="block";
               $("#msg_error").text(result["error"]);
             }
-          });
-
-          bid = getUrlParameter('id');
-
-          if (bid==null|| bid == ""){
-            window.location.replace("http://127.0.0.1:3001/bulletin/index.html");
-          }
+          });          
 
           // -----------------------------------------
           $.ajax({
@@ -171,7 +171,8 @@
             url: "http://127.0.0.1:8000/bulletins/"+bid,
             data:'',
             success: function(response) {
-              globaldetail = response   
+              globaldetail = response;
+
               $("#Code").val(response.code);            
               $("#BType").val(response.btype);
               $("#Priority").val(response.priority);

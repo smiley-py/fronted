@@ -38,15 +38,6 @@
     <!-- Main styles for this application-->
     <link href="css/style.css" rel="stylesheet">
     
-    <style>
-      .tableborder table {
-        border-collapse: collapse;
-      }
-
-      .tableborder table, .tableborder td, .tableborder th {
-        border: 1px solid black;
-      }
-    </style>
     
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
@@ -82,7 +73,7 @@
           var bid = getUrlParameter('id');
 
           if (bid==null|| bid == ""){
-            window.location.replace("http://127.0.0.1:3001/bulletin/index.html");
+            window.location.replace("http://127.0.0.1:3001/agent/index.html");
           }
 
           $.ajax({
@@ -93,42 +84,21 @@
               'Authorization': 'Token ' + localStorage.getItem("token")
             },
             
-            url: "http://127.0.0.1:8000/bulletins/"+bid,
+            url: "http://127.0.0.1:8000/agents/"+bid,
             data:'',
             success: function(response) {
               $("#id").text(response.id);
-              
-              $("#to_list").text(response.tolist);
-              $("#cc_list").text(response.cclist);
-              $("#bcc_list").text(response.bcclist);
+              $("#name").text(response.name);
+              $("#description").text(response.description);
+              $("#script_content").text(response.script_content);
+              $("#script_inputs").text(response.script_inputs);
+              $("#delay").text('Every (' + response.delay + ') seconds');
+              $("#output").text(response.output);
+              $("#result").text(response.result);
+              $("#start_time").text(response.start_time);
 
-              $("#btype").text(response.btype);
-              $("#priority").text(response.priority);
-              $("#state").text(response.state);
-              document.getElementById("state_td").style.backgroundColor=response.color;
-              $("#title").text(response.code+' - '+response.title);
-              document.getElementById("title").style.color="#ffffff";
-              document.getElementById("title_div").style.backgroundColor=response.color;
-              $("#insert_time").text(response.insert_time);
-              $("#begin_time").text(response.begin_time);
-              $("#end_time").text(response.end_time);
-              $("#resolved_time").text(response.resolved_time);
-              $("#created_by").text(response.created_by);
-              $("#detail").text(response.detail);
-              $("#effect").text(response.effect);
-              $("#contact").text(response.contact);
-              $("#ticket_case_url").text(response.ticket_case_id);
-              $("#ticket_case_url").attr("href", response.ticket_case_url);
-              $("#duration").text(response.duration);
-              $("#resolved_by").text(response.resolved_by);
-              $("#temporary_solution").text(response.temporary_solution);
-              $("#permanent_solution").text(response.permanent_solution); 
-              $("#root_cause").text(response.root_cause); 
-              // if(response.is_resolved=="1"){
-              //   document.getElementById("resolution").style.display="block";
-              // }
-              if(response.is_automated=="1"){
-                ('#is_automated').prop('checked', true);
+              if(response.is_scheduled=="1"){
+                ('#is_scheduled').prop('checked', true);
               }
                
             },
@@ -263,274 +233,120 @@
       <div class="c-body">
         <main class="c-main">
           <div class="container-fluid">
-            <div class="fade-in">
-              
+            <div class="fade-in">                                  
               <div class="row">
-                <div class="col-lg-6 "> 
-                  <div class="card ">  
-                      <button class="btn btn-danger" type="submit" id="btn_delete"> Delete Bulletin</button>
-                  </div>                  
-                </div> 
+                <div class="col-lg-12">
+                  <div class="card">
+                    <div class="card-header"><strong>Agent</strong> Detail</div>
+                    <div class="card-body">
 
-                <div class="col-lg-6 "> 
-                  <div class="card ">  
-                      <button class="btn btn-secondary" type="reset" id="btn_back"> Back to List</button>
-                  </div>                  
-                </div> 
-            </div>                                      
-
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="card">
-                  <div class="card-header"><strong>Bulletin</strong> Detail</div>
-                  <div class="card-body">
-
-                    <form class="form-horizontal " action="" method="post" >
-                      <div class="form-group row" >    
+                      <form class="form-horizontal " action="" method="post" >
+                        <div class="form-group row" >    
 <!-- ----------------------------------------------------------- -->
-<br />
-<div class="alert alert-success col-lg-12" id="msg_success_div"  style="display: none;">
-<span id="msg_success" > success </span> 
 
+<div class="alert alert-success col-lg-12" id="msg_success_div"  style="display: none;">
+  <span id="msg_success" > success </span> 
+  
 </div>
 
 <div class="alert alert-danger col-lg-12" id="msg_error_div"  style="display: none;">
-<span id="msg_error" > error </span> 
-
+  <span id="msg_error" > error </span> 
+  
 </div>
 
-<br />
-
-<table id="mailaddresses" class="table table-responsive-sm table-bordered">
-<tr>
-    <td colspan="2"
-        style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
-        <span style=" font-weight: bold;">Mail Addresses</span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        To List
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="to_list"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; ">
-        CC List
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="cc_list"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; ">
-        BCC list
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="bcc_list"></span>
-    </td>
-</tr>                      
-
-</table>
-
 <!-- ----------------------------------------------------------- -->                          
-                      </div>                                                
-
-                      <div class="form-group row" >    
-<!-- ----------------------------------------------------------- -->
-<table class="table table-responsive-sm table-bordered">
-<tr>
-    <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">                               
-      <span id="insert_time"></span>
-    </td>
-</tr>
-<tr>
-    <td colspan="2" id="title_div" style="margin: 10px; padding: 10px;  text-align: center;">
-        <span id="title" style="font-weight: bold;"></span>
-    </td>
-</tr>
-
-<tr>
-    <td style=" text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Type
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="btype"></span>
-    </td>
-</tr>
-
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Created By
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px; ">
-      <span id="created_by"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Detail
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="detail"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Effect
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="effect"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Contact
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="contact"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Begin Time
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="begin_time"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        End Time
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="end_time"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Duration
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="duration"></span> (Min.)
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Ticket Case Id
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-        <a id="ticket_case_url" href="#" style="text-decoration:none;"> </a>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Priority
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="priority"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-      State
-    </td>
-    <td id ="state_td" style="text-align: left; margin: 10px; padding: 10px; color: #ffffff; ">
-        <span id="state"> </span>                                 
-    </td>
-</tr>
-</table>
-<!-- ----------------------------------------------------------- -->                          
-                      </div> 
-                      
-                      <div class="form-group row" >    
-<!-- ----------------------------------------------------------- -->
-<table id="resolution"  class="table table-responsive-sm table-bordered">
-<tr>
-    <td colspan="2" style="margin: 10px; padding: 10px; text-align: right;">
-      <span id="resolved_time"> </span>
-    </td>
-</tr>
-<tr>
-    <td colspan="2"
-        style="color:#ffffff; background-color: #1985ac; margin: 10px; padding: 10px;  text-align: center; ">
-        <span style=" font-weight: bold;">Resolution</span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Resolved By
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;width: 350px;">
-      <span id="resolved_by"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Temporary Solution
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="temporary_solution"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Permanent_solution
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="permanent_solution"></span>
-    </td>
-</tr>
-<tr>
-    <td style="text-align: left; margin: 10px; padding: 10px; width: 150px;">
-        Root Cause
-    </td>
-    <td style=" text-align: left; margin: 10px; padding: 10px;">
-      <span id="root_cause"></span>
-    </td>
-</tr>
-
-</table>
-
-<!-- ----------------------------------------------------------- -->                          
-                      </div> 
-                    </form>
-
-
-                  </div>    
-                </div>
-              </div>
-            </div>
-
-
-
-            
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="card">
-                  <div class="card-header"><strong>Automation</strong> Detail</div>
-                  <div class="card-body">
-                    <form class="form-horizontal" action="" method="post">
-                      <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="hf-CaseID">Is Automated</label>
-                        <div class="col-md-9">
-                          <label class="c-switch c-switch-label c-switch-danger">
-                            <input class="c-switch-input" type="checkbox" id="is_automated" disabled="disabled" ><span class="c-switch-slider" data-checked="On" data-unchecked="Off"></span>
-                          </label>
+                        </div> 
+                        
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Name</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="name"></span>
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>    
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Description</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="description"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Script Content</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="script_content"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Script Inputs</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="script_inputs"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Delay</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="delay"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Output</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="output"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Result</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="result"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Start Time</label>
+                          <div class="col-md-9">
+                            <label class="col-form-label" for="hf">
+                              <span class="" id="start_time"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="hf-CaseID">Is Scheduled</label>
+                          <div class="col-md-9">
+                            <label class="c-switch c-switch-label c-switch-danger">
+                              <input class="c-switch-input" type="checkbox" id="is_scheduled" disabled="disabled" ><span class="c-switch-slider" data-checked="On" data-unchecked="Off"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="card-footer">
+                          <button class="btn btn-danger" type="submit" id="btn_delete"> Delete </button>
+                          <a href="agent/index.html" class="btn btn-secondary" > Back to list</a>
+                        </div>
+
+                      </form>
+
+
+                    </div>    
+                  </div>
                 </div>
               </div>
-            </div>
 
-              
+    
+
+                
             </div>
-             
-            </div>
+          </div>
           </div>
         </main>
         <footer class="c-footer">
@@ -557,12 +373,7 @@
         localStorage.clear();
         window.location.replace("http://127.0.0.1:3001/login.html");
       });
-
-      $("#btn_back").click(function(e) {
-        e.preventDefault();
-        window.location.replace("http://127.0.0.1:3001/bulletin/index.html");
-      });
-      
+     
       function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -574,7 +385,7 @@
 
       $("#btn_delete").click(function(e) {
         e.preventDefault();
-        if(confirm("Are you sure delete this bulletin? ")==true){
+        if(confirm("Are you sure delete this agent? ")==true){
           $.ajax({
               type: "DELETE",
               dataType: "json",    
@@ -583,7 +394,7 @@
                 'Authorization': 'Token ' + localStorage.getItem("token")
               },
               
-              url: "http://127.0.0.1:8000/bulletins/"+bid+"/delete/",
+              url: "http://127.0.0.1:8000/agents/"+bid+"/delete/",
               data:'',
               success: function(response) {
                 document.getElementById("msg_success_div").style.display="block";

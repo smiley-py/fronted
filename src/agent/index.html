@@ -81,7 +81,7 @@
               'Authorization': 'Token ' + localStorage.getItem("token")
             },
             
-            url: "http://127.0.0.1:8000/bulletins/",
+            url: "http://127.0.0.1:8000/agents/",
             data:{
               'page':page,
               'search':search
@@ -92,40 +92,43 @@
               var len = results.length;
               for(var i=0; i<len; i++){
                   var id = results[i].id;
-                  var type = results[i].btype;
-                  var priority = results[i].priority;
-                  var state = results[i].state;
-                  var code = results[i].code;
-                  var title = results[i].title;
-                  var begintime= results[i].begin_time;
-                  var endtime = results[i].end_time;  
-                  var color = results[i].color;    
-                  var is_automated = results[i].is_automated;  
+                  var name = results[i].name;
+                  var delay = results[i].delay;
+                  var output = results[i].output;
+                  var result = results[i].result;
+                  var start_time = results[i].start_time;
+                  var is_scheduled = results[i].is_scheduled; 
+
                   var sw="";              
-                  if(is_automated=="1"){
+                  if(is_scheduled=="1"){
                     sw= "<input class='c-switch-input' type='checkbox' checked='' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";
                   }else{
                     sw= "<input class='c-switch-input' type='checkbox' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";                      
                   }
 
+                  var sw2="";              
+                  if(result=="1"){
+                    sw2= "<input class='btn btn-success' type='button' disabled='disabled' value='Triggered' />";
+                  }else{
+                    sw2= "<input class='btn btn-danger' type='button' disabled='disabled' value='"+result+"' />";}
+
+
                   var tr_str = "<tr>" +
                       "<td >" + (i+1) + "</td>" +
                       "<td ><label class='c-switch c-switch-label c-switch-danger'>"+ sw +"</label></td>"+                      
-                      "<td >" + type + "</td>" +
-                      "<td >" + priority + "</td>" +
-                      "<td style='color:"+color+";'>" + state + "</td>" +
-                      "<td >" + code + "</td>" +
-                      "<td >" + title + "</td>" +
-                      "<td >" + begintime + "</td>" +
-                      "<td >" + endtime + "</td>" +
+                      "<td >" + name + "</td>" +
+                      "<td >" + delay + "</td>" +
+                      "<td >" + start_time + "</td>" +
+                      "<td >" + output + "</td>" +
+                      "<td >" + sw2 + "</td>" +
                       "<td align='center'> " +
-                        "<a href='bulletin/detail.html?id=" + id + "'> Detail </a> "+
-                        "<a href='bulletin/edit.html?id=" + id + "'> Edit </a> "+
-                        "<a href='bulletin/delete.html?id=" + id + "'> Delete </a>"+
+                        "<a href='agent/detail.html?id=" + id + "'> Detail </a> "+
+                        "<a href='agent/edit.html?id=" + id + "'> Edit </a> "+
+                        "<a href='agent/delete.html?id=" + id + "'> Delete </a>"+
                       "</td>"+
                     "</tr>";
 
-                    $("#bulletinTable tbody").append(tr_str); 
+                    $("#agentTable tbody").append(tr_str); 
                 }
 
               
@@ -134,9 +137,9 @@
 
               for(var j=1; j<(response.count/response.page_size)+1; j++){
                 if (j==response.current){
-                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?page="+j+"'>"+j+"</a></li>";
+                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/agent/index.html?search="+search+"&page="+j+"'>"+j+"</a></li>";
                 }else{
-                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?page="+j+"''>"+j+"</a></li>";
+                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/agent/index.html?search="+search+"&page="+j+"''>"+j+"</a></li>";
                 }                 
               }
 
@@ -283,7 +286,7 @@
               <div class="form-group row">
                 <div class="col-lg-12">
                   <div class="input-group">
-                      <input class="form-control" id="txt_search" type="text" placeholder="Enter Code or Title">
+                      <input class="form-control" id="txt_search" type="text" placeholder="Enter Agent Name">
                       <button class="btn btn-success" id="btn_search"> Search </button>
                   </div>
                 </div>
@@ -299,22 +302,20 @@
                     </div>                    
 
                     <div class="card-header">
-                      <i class="fa fa-align-justify"></i> Combined All Bulletins &nbsp;
-                      <a href="bulletin/create.html" class="btn btn-warning" id=""> Create </a>
+                      <i class="fa fa-align-justify"></i> Combined All Agents &nbsp;
+                      <a href="agent/create.html" class="btn btn-warning" id=""> Create </a>
                     </div>
                     <div class="card-body">
-                      <table id="bulletinTable" class="table table-responsive-sm table-bordered table-striped table-sm">
+                      <table id="agentTable" class="table table-responsive-sm table-bordered table-striped table-sm">
                         <thead>
                           <tr>
                             <th>No</th>
-                            <th>Automated</th>
-                            <th>Type</th>
-                            <th>Priority</th>
-                            <th>State</th>
-                            <th>Code</th>
-                            <th>Title</th> 
-                            <th>Begin Time</th>
-                            <th>End Time</th>                           
+                            <th>Scheduled</th>
+                            <th>Name</th>
+                            <th>Delay</th>
+                            <th>Start Time</th> 
+                            <th>Output</th>
+                            <th>Result</th>                         
                             <th style='text-align:center;'>Actions</th>
                           </tr>
                         </thead>
@@ -364,7 +365,7 @@
 
       $("#btn_search").click(function(e) {
         e.preventDefault();
-        $("#bulletinTable tbody").empty();
+        $("#agentTable tbody").empty();
         $("#pagination").empty();
         var search = $("#txt_search").val();
 
@@ -376,7 +377,7 @@
               'Authorization': 'Token ' + localStorage.getItem("token")
             },
             
-            url: "http://127.0.0.1:8000/bulletins/",
+            url: "http://127.0.0.1:8000/agents/",
             data:{              
               'search': search,
               'page':1             
@@ -386,43 +387,53 @@
 
               var len = results.length;
               for(var i=0; i<len; i++){
-                  var id = results[i].id;
-                  var type = results[i].btype;
-                  var priority = results[i].priority;
-                  var state = results[i].state;
-                  var code = results[i].code;
-                  var title = results[i].title;
-                  var begintime= results[i].begin_time;
-                  var endtime = results[i].end_time;                  
-                  var color = results[i].color;  
+                var id = results[i].id;
+                var name = results[i].name;
+                var delay = results[i].delay;
+                var output = results[i].output;
+                var result = results[i].result;
+                var start_time = results[i].start_time;
+                var is_scheduled = results[i].is_scheduled; 
 
-                  var tr_str = "<tr>" +
-                      "<td >" + (i+1) + "</td>" +
-                      "<td >" + type + "</td>" +
-                      "<td >" + priority + "</td>" +
-                      "<td style='color:" +color+ ";'>" + state + "</td>" +
-                      "<td >" + code + "</td>" +
-                      "<td >" + title + "</td>" +
-                      "<td >" + begintime + "</td>" +
-                      "<td >" + endtime + "</td>" +
-                      "<td align='center'> " +
-                        "<a href='bulletin/detail.html?id=" + id + "'> Detail </a> "+
-                        "<a href='bulletin/edit.html?id=" + id + "'> Edit </a> "+
-                        "<a href='bulletin/delete.html?id=" + id + "'> Delete </a>"+
-                      "</td>"+
-                    "</tr>";
+                var sw="";              
+                if(is_scheduled=="1"){
+                  sw= "<input class='c-switch-input' type='checkbox' checked='' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";
+                }else{
+                  sw= "<input class='c-switch-input' type='checkbox' disabled='disabled' value='1'><span class='c-switch-slider' data-checked='On' data-unchecked='Off'></span>";                      
+                }
 
-                    $("#bulletinTable tbody").append(tr_str); 
-                    
-                  }
-            
+                var sw2="";              
+                if(result=="1"){
+                  sw2= "<input class='btn btn-success' type='button' disabled='disabled' value='Triggered' />";
+                }else{
+                  sw2= "<input class='btn btn-danger' type='button' disabled='disabled' value='"+result+"' />";}
+
+
+                var tr_str = "<tr>" +
+                    "<td >" + (i+1) + "</td>" +
+                    "<td ><label class='c-switch c-switch-label c-switch-danger'>"+ sw +"</label></td>"+                      
+                    "<td >" + name + "</td>" +
+                    "<td >" + delay + "</td>" +
+                    "<td >" + start_time + "</td>" +
+                    "<td >" + output + "</td>" +
+                    "<td >" + sw2 + "</td>" +
+                    "<td align='center'> " +
+                      "<a href='agent/detail.html?id=" + id + "'> Detail </a> "+
+                      "<a href='agent/edit.html?id=" + id + "'> Edit </a> "+
+                      "<a href='agent/delete.html?id=" + id + "'> Delete </a>"+
+                    "</td>"+
+                  "</tr>";
+
+                  $("#agentTable tbody").append(tr_str); 
+                }
+
               var page_str="<li class='page-item'><a class='page-link' href='"+response.links.previous+"'>Prev</a></li>";
 
               for(var j=1; j<(response.count/response.page_size)+1; j++){
                 if (j==response.current){
-                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?search="+search+"&page="+j+"'>"+j+"</a></li>";
+                  page_str += "<li class='page-item active'><a class='page-link' href='http://127.0.0.1:3001/agent/index.html?search="+search+"&page="+j+"'>"+j+"</a></li>";
                 }else{
-                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/bulletin/index.html?search="+search+"&page="+j+"''>"+j+"</a></li>";
+                  page_str +="<li class='page-item'><a class='page-link' href='http://127.0.0.1:3001/agent/index.html?search="+search+"&page="+j+"''>"+j+"</a></li>";
                 }                 
               }
 
